@@ -6,8 +6,8 @@ interface ProductDocument extends Document {
 }
 
 const ProductSchema = new Schema({
-  name: String,
-  price: Number,
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
 });
 
 const Product = model<ProductDocument>('Product', ProductSchema);
