@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import Product from '../models/product.model';
 import multer from 'multer';
+import checkAuth from '../middleware/checkAuth';
 
 const storage = multer.diskStorage({
   // where the file will be saved
@@ -65,7 +66,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // Create a post
-router.post('/', upload.single('productImage'), async (req: Request, res: Response) => {
+router.post('/', checkAuth, upload.single('productImage'), async (req: Request, res: Response) => {
   const { name, price } = req.body;
   const path = req.file.path.replace(/\\/g, '/');
   const productImage = `http://localhost:5000/${path}`;
@@ -117,7 +118,7 @@ router.get('/:productId', async (req: Request, res: Response) => {
 });
 
 // update a product
-router.patch('/:productId', async (req: Request, res: Response) => {
+router.patch('/:productId', checkAuth, async (req: Request, res: Response) => {
   const { productId } = req.params;
   try {
     await Product.updateOne({ _id: productId }, { $set: req.body });
@@ -136,7 +137,7 @@ router.patch('/:productId', async (req: Request, res: Response) => {
 });
 
 // delete a product
-router.delete('/:productId', async (req: Request, res: Response) => {
+router.delete('/:productId', checkAuth, async (req: Request, res: Response) => {
   const { productId } = req.params;
   try {
     const deletedProduct = await Product.deleteOne({ _id: productId });

@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import checkAuth from '../middleware/checkAuth';
 import Order from '../models/order.model';
 import Product from '../models/product.model';
 
@@ -55,7 +56,7 @@ router.get('/:orderId', async (req: Request, res: Response) => {
 });
 
 // create a order
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', checkAuth, async (req: Request, res: Response) => {
   const { quantity, productId } = req.body;
   try {
     const product = await Product.findById(productId);
@@ -90,7 +91,7 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // delete a order
-router.delete('/:orderId', async (req: Request, res: Response) => {
+router.delete('/:orderId', checkAuth, async (req: Request, res: Response) => {
   const { orderId } = req.params;
   try {
     const deletedOrder = await Order.findByIdAndDelete(orderId);
